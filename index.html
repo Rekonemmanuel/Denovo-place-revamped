@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denovo Place Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="favicon/site.webmanifest">
+    <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon">
+    <style>
+        :root {
+            --theme-yellow: #FFD700;
+            --theme-black: #1a1a1a;
+            --theme-red: #e53935;
+            --theme-blue: #1877f3;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: white;
+            min-height: 100vh;
+            color: var(--theme-black);
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--theme-red);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav-container {
+            width: 100%;
+            padding: 0 1rem;
+        }
+        .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 5rem;
+            position: relative;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .nav-logo {
+            height: 3.5rem;
+            width: auto;
+            object-fit: contain;
+        }
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding-bottom: 0;
+        }
+        .nav-button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .nav-button:hover {
+            background: var(--theme-yellow);
+            color: var(--theme-black);
+        }
+        .nav-button.active {
+            background: var(--theme-yellow);
+            color: var(--theme-black);
+        }
+        .nav-button.active:hover {
+            background: #fffbe6;
+        }
+
+        /* Menu Section Tabs */
+        #menu-section-tabs {
+            display: none;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            justify-items: center;
+            align-items: start;
+            margin-bottom: 2rem;
+            width: 100%;
+            max-width: 100vw;
+        }
+        .menu-section-tab {
+            background: none;
+            border: none;
+            padding: 0;
+            border-radius: 2em;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: box-shadow 0.2s, background 0.2s;
+            margin: 0;
+            justify-content: center;
+            /* Remove border for cleaner look */
+            outline: none;
+        }
+        .menu-tab-img {
+            width: 100%;
+            max-width: 160px;
+            height: auto;
+            aspect-ratio: 1/1;
+            border-radius: 2em;
+            object-fit: cover;
+            border: 4px solid #bfa100;
+            box-shadow: 0 4px 16px rgba(191, 161, 0, 0.25), 0 1px 4px #fffbe6cc;
+            transition: border 0.2s, box-shadow 0.2s;
+            background: #fffbe6;
+            display: block;
+        }
+        @media (max-width: 768px) {
+            #menu-section-tabs {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.7rem;
+            }
+            .menu-tab-img {
+                max-width: 110px;
+            }
+        }
+        @media (max-width: 480px) {
+            #menu-section-tabs {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .menu-tab-img {
+                max-width: 90vw;
+            }
+        }
+        .menu-section-tab:focus .menu-tab-img,
+        .menu-section-tab:hover .menu-tab-img {
+            border: 8px solid #e53935;
+            box-shadow: 0 0 48px #ffd70088, 0 8px 32px rgba(191, 161, 0, 0.25);
+        }
+        .menu-tab-label {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-top: 0.2em;
+            text-align: center;
+        }
+        /* Removed display: grid !important from #menu-section-tabs. Now only display: none is set below. */
+        #menu-section-tabs,
+        #more-section-tabs {
+            display: none;
+        }
+        #menu-section-tabs.show,
+        #more-section-tabs.show {
+            display: flex !important;
+        }
+
+        /* Mobile Responsive for Menu Section Tabs */
+        @media (max-width: 768px) {
+            .menu-tab-img {
+                width: 80vw !important;
+                max-width: 280px !important;
+                border: 4px solid #bfa100 !important;
+                box-shadow: 0 4px 16px rgba(191, 161, 0.25), 0 1px 4px #fffbe6cc !important;
+            }
+            .menu-section-tab:focus .menu-tab-img,
+            .menu-section-tab:hover .menu-tab-img {
+                border: 5px solid #e53935 !important;
+                box-shadow: 0 0 24px #ffd70088, 0 4px 16px rgba(191, 161, 0.25) !important;
+            }
+            #menu-section-tabs {
+                grid-template-columns: repeat(2, minmax(140px, 1fr));
+                gap: 1.5rem 2rem;
+                margin-bottom: 1.5rem;
+            }
+            .menu-section-tab {
+                margin-bottom: 1.5rem;
+            }
+            .menu-tab-label {
+                font-size: 0.85em;
+                margin-top: 0.3em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu-tab-img {
+                width: 70vw !important;
+                max-width: 200px !important;
+                border: 3px solid #bfa100 !important;
+            }
+            .menu-section-tab:focus .menu-tab-img,
+            .menu-section-tab:hover .menu-tab-img {
+                border: 4px solid #e53935 !important;
+            }
+            #menu-section-tabs {
+                grid-template-columns: repeat(2, minmax(120px, 1fr));
+                gap: 1rem 1.5rem;
+            }
+            .menu-section-tab {
+                margin-bottom: 1rem;
+            }
+            .menu-tab-label {
+                font-size: 0.8em;
+            }
+        }
+
+        /* More Section Tabs (hidden by default) */
+        .more-section-tab {
+            background: var(--theme-blue);
+            border: 2px solid var(--theme-blue);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+            box-shadow: 0 2px 8px #1877f322;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            white-space: nowrap;
+            margin-bottom: 0.5rem;
+            justify-content: flex-start;
+            width: 220px;
+            box-sizing: border-box;
+        }
+        .more-section-tab.active, .more-section-tab:hover {
+            background: #1251a3;
+            color: #fff;
+            box-shadow: 0 4px 16px #1877f355;
+        }
+        #more-section-tabs {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        /* Back Button */
+        .menu-back-btn {
+            background: var(--theme-blue);
+            color: #fff;
+            border: none;
+            font-size: 0.95em;
+            border-radius: 50%;
+            width: 1.6em;
+            height: 1.6em;
+            padding: 0;
+            margin-right: 0.5em;
+            box-shadow: 0 1px 3px #bfa10022;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: border 0.2s, box-shadow 0.2s;
+        }
+        .menu-back-btn:hover {
+            border: 1.5px solid var(--theme-yellow);
+            box-shadow: 0 4px 16px #bfa10033;
+        }
+        .menu-back-btn span {
+            font-size: 0.95em;
+        }
+
+        /* Section Titles */
+        .section-title {
+            color: var(--theme-red);
+            border-bottom: 2px solid var(--theme-yellow);
+            font-size: 1.875rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
+
+        /* Image Styles for Elegant Placement */
+        .section-header-image {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            margin: 0 auto 2rem auto;
+            display: block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-header-image:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.18);
+        }
+
+        .decorative-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid var(--theme-yellow);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+
+        .menu-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            border: 2px solid var(--theme-red);
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .image-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .image-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .floating-image {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid var(--theme-yellow);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1;
+        }
+
+        .menu-section-with-image {
+            position: relative;
+            padding: 2rem;
+            background: linear-gradient(135deg, #fff9f9 0%, #fff 100%);
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            border: 1px solid #f0f0f0;
+        }
+
+        /* Links */
+        a {
+            color: var(--theme-blue);
+            transition: color 0.2s;
+        }
+        a:hover {
+            color: var(--theme-red);
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 0.5rem;
+            z-index: 1000;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-content a {
+            color: #374151;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 1rem;
+        }
+
+        .dropdown-content a span {
+            display: inline-block;
+            min-width: 1.5em;
+            text-align: center;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f9fafb;
+        }
+
+        .dropdown-content a.active {
+            background-color: #7f1d1d;
+            color: white;
+        }
+
+        /* Click-based dropdown only */
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 640px) {
+            .nav-menu {
+                gap: 0.5rem;
+            }
+
+            .nav-button {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.75rem;
+            }
+
+            .dropdown-content {
+                min-width: 180px;
+                right: -0.5rem;
+            }
+        }
+
+        /* Mobile Responsive for Menu Content */
+        @media (max-width: 768px) {
+            .menu-section {
+                padding: 1rem 0;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.25rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .menu-grid {
+                gap: 0.75rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .menu-card {
+                padding: 0.75rem;
+            }
+            
+            .menu-item h4 {
+                font-size: 1rem;
+            }
+            
+            .menu-item p {
+                font-size: 0.8rem;
+            }
+            
+            .menu-price {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main {
+                padding: 1rem 0.5rem;
+            }
+            
+            .menu-section {
+                padding: 0.75rem 0;
+            }
+            
+            .section-title {
+                font-size: 1.25rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .menu-grid {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .menu-card {
+                padding: 0.5rem;
+            }
+            
+            .menu-item h4 {
+                font-size: 0.9rem;
+            }
+            
+            .menu-item p {
+                font-size: 0.75rem;
+            }
+            
+            .menu-price {
+                font-size: 0.85rem;
+            }
+            
+            .menu-note {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Home Section */
+        .home-section {
+            text-align: center;
+            padding: 4rem 0;
+        }
+
+        .home-content {
+            max-width: 64rem;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            width: 12rem;
+            height: 8rem;
+            margin: 0 auto 1.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .home-logo {
+            height: 100%;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .tagline {
+            color: #fecaca;
+            font-style: italic;
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .home-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.25rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+            letter-spacing: 0.04em;
+            text-shadow: 0 2px 8px #e6b80022;
+        }
+
+        .home-description {
+            font-size: 1.25rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .home-subdescription {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+
+        .home-action-btn {
+            display: inline-block;
+            background: #e6b800;
+            color: #fff;
+            border: none;
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 8px #bfa10033;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .home-action-btn:last-child {
+            margin-right: 0;
+        }
+        .home-action-btn:hover {
+            background: #bfa100;
+            box-shadow: 0 4px 16px #bfa10099;
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        /* Menu Sections */
+        .menu-section {
+            padding: 2rem 0;
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--theme-red);
+        }
+
+        .menu-grid {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .menu-card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .menu-item-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .menu-price {
+            font-weight: bold;
+            color: #7f1d1d;
+            align-self: flex-start;
+            margin-left: 1rem;
+            white-space: nowrap;
+        }
+
+        .menu-item-center {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-item-content h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-item-content p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .menu-note {
+            font-size: 0.875rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Dialog */
+        .dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .dialog-content {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            max-width: 28rem;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .dialog-header {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dialog-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .dialog-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+        }
+
+        .dialog-close:hover {
+            background-color: #f3f4f6;
+            color: #374151;
+        }
+
+        .contact-info {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .contact-item h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item p, .contact-item ul {
+            color: #6b7280;
+        }
+
+        .contact-item ul {
+            list-style: none;
+            font-size: 0.875rem;
+        }
+
+        .contact-item li {
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-item a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+
+        .mb-8 {
+            margin-bottom: 2rem;
+        }
+
+        .space-y-4 > * + * {
+            margin-top: 1rem;
+        }
+
+        /* Form Styles */
+        input, select, textarea {
+            font-family: inherit;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #7f1d1d;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .home-title {
+                font-size: 1.875rem;
+            }
+
+            .home-description {
+                font-size: 1.125rem;
+            }
+
+            .home-subdescription {
+                font-size: 1rem;
+            }
+        }
+
+        .facebook-review-btn {
+            background: #1877f3;
+            color: #fff;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            display: inline-block;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+        .facebook-review-btn:hover {
+            background: #145db2;
+        }
+
+        .gold-icon {
+            color: #FFD700;
+            font-size: 1.3em;
+            vertical-align: middle;
+            filter: drop-shadow(0 0 2px #bfa10055);
+        }
+
+        @keyframes gold-glow {
+            0% { box-shadow: 0 0 0px #FFD700; }
+            50% { box-shadow: 0 0 16px 6px #FFD700; }
+            100% { box-shadow: 0 0 0px #FFD700; }
+        }
+        .dropdown.glow {
+            animation: gold-glow 1s ease;
+        }
+
+        .fab-order {
+            position: fixed;
+            right: 1.5rem;
+            bottom: 1.5rem;
+            z-index: 9999;
+            background: linear-gradient(145deg, #e6b800 60%, #fffbe6 100%);
+            color: #fff;
+            border: none;
+            border-radius: 2em;
+            box-shadow: 0 6px 24px #bfa10099, 0 2px 8px #fffbe6cc;
+            min-width: 2.2rem;
+            min-height: 2.2rem;
+            padding: 0.3em 0.7em;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            width: auto;
+            height: auto;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+        .fab-order.visible {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            transition: opacity 0.3s;
+        }
+        .fab-order:active {
+            box-shadow: 0 2px 4px #bfa10099, 0 1px 2px #fffbe6cc;
+            background: linear-gradient(145deg, #e6b800 40%, #ffe066 100%);
+            transform: scale(0.97) translateY(2px);
+        }
+        .fab-order .gold-icon {
+            font-size: 1.7em;
+            filter: drop-shadow(0 0 2px #bfa10055);
+        }
+        .fab-tooltip {
+            visibility: hidden;
+            opacity: 0;
+            background: #222;
+            color: #fff;
+            text-align: center;
+            border-radius: 0.4em;
+            padding: 0.3em 0.8em;
+            position: absolute;
+            right: 110%;
+            bottom: 50%;
+            transform: translateY(50%);
+            font-size: 1rem;
+            white-space: nowrap;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        .fab-order:hover .fab-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .order-bottom-btn {
+            background: var(--theme-blue);
+            color: #fff;
+            border: none;
+            border-radius: 0.7em;
+            box-shadow: 0 2px 8px #bfa10033;
+            padding: 1em 0;
+            font-size: 1.25rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7em;
+            width: 100%;
+            max-width: 400px;
+            margin: 2.5rem auto 0 auto;
+        }
+        .order-bottom-btn:hover {
+            background: #1251a3;
+            box-shadow: 0 4px 16px #1877f399;
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        .cta-button {
+            background: #7f1d1d;
+            color: #fff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            background: #991b1b;
+            box-shadow: 0 4px 16px #991b1b33;
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        /* More dropdown styles */
+        .more-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .more-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 0.5rem;
+            z-index: 1000;
+            margin-top: 0.5rem;
+        }
+        .more-dropdown-content button {
+            background: none;
+            border: none;
+            color: #374151;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            width: 100%;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f3f4f6;
+            transition: background 0.2s;
+        }
+        .more-dropdown-content button:last-child {
+            border-bottom: none;
+        }
+        .more-dropdown-content button:hover {
+            background-color: #f9fafb;
+        }
+        .more-dropdown.active .more-dropdown-content {
+            display: block;
+        }
+
+        /* Section Subtitles */
+        .section-subtitle {
+            color: var(--theme-red);
+        }
+
+        /* Add new button styles */
+        .explore-vehicles-btn {
+            background: #60a5fa; /* lighter blue */
+            color: #111; /* black text */
+            border: 2px solid var(--theme-red);
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 8px #bfa10033;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .explore-vehicles-btn:hover {
+            background: #93c5fd;
+        }
+        .explore-menu-btn {
+            background: #ffe066; /* yellow */
+            color: #111; /* black text */
+            border: 2px solid var(--theme-red);
+            border-radius: 0.375rem;
+            box-shadow: 0 2px 8px #bfa10033;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            margin-right: 1rem;
+            margin-top: 1rem;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .explore-menu-btn:hover {
+            background: #ffe066cc;
+        }
+
+        /* Beverages Section */
+        .beverages-bg {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            position: relative;
+            min-height: 100vh;
+            height: auto;
+        }
+
+        .beverages-overlay {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            min-height: 100%;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <img src="denovoplace_logo2.png" alt="Denovo Place Logo" class="nav-logo">
+                </div>
+                <div class="nav-menu">
+                    <a class="nav-button active" href="index.html">Home</a>
+                    <button class="nav-button" id="menu-btn">Menu</button>
+                    <button class="nav-button" id="more-btn">More</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Home Section -->
+        <section id="home" class="section-content">
+            <div class="home-section">
+                <div class="home-content">
+                    <div class="logo-container">
+                        <img src="denovoplace_logo2.png" alt="Denovo Place Logo" class="home-logo">
+                    </div>
+                    <h1 class="home-title">Welcome to Denovo Place</h1>
+                    <p class="home-description">We serve tradition with a twist—fresh, local, and always made with care.</p>
+                    <p class="home-subdescription">From hearty meals to head-turning wheels, Denovo Place brings it all together. Savor our curated kitchen menu—or take a stroll next door and discover the lineup at <strong>Denovo Motors Limited</strong>.</p>
+                    <button id="explore-vehicles-btn" class="explore-vehicles-btn">Explore Vehicles</button>
+                    <button id="explore-menu-btn" class="explore-menu-btn">Explore Menu</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Menu Section Tabs -->
+        <div id="menu-section-tabs" style="display: none;">
+            <button class="menu-section-tab" data-section="breakfast">
+                <img src="food images/breakfast.PNG" alt="Breakfast" class="menu-tab-img" />
+            </button>
+            <button class="menu-section-tab" data-section="beverages">
+                <img src="food images/beverages.PNG" alt="Beverages" class="menu-tab-img" />
+            </button>
+            <button class="menu-section-tab" data-section="snacks">
+                <img src="food images/snacks.PNG" alt="Snacks" class="menu-tab-img" />
+            </button>
+            <button class="menu-section-tab" data-section="accompaniments">
+                <img src="food images/accompaniments.PNG" alt="Accompaniments" class="menu-tab-img" />
+            </button>
+            <button class="menu-section-tab" data-section="maincourse">
+                <img src="food images/main_course.PNG" alt="Main Course" class="menu-tab-img" />
+            </button>
+            <button class="menu-section-tab" data-section="platter">
+                <img src="food images/denovo_plartter.PNG" alt="Platter" class="menu-tab-img" />
+            </button>
+            <button class="menu-section-tab" data-section="vegetables">
+                <img src="food images/vegetables.PNG" alt="Vegetables" class="menu-tab-img" />
+            </button>
+        </div>
+
+        <!-- More Section Tabs -->
+        <div id="more-section-tabs" style="display: none;">
+            <button class="more-section-tab" id="glovo-order-btn">
+                <span class="gold-icon">🛒</span> Order on Glovo
+            </button>
+            <button class="more-section-tab" id="reviews-more-btn">
+                <span class="gold-icon">⭐</span> Feedback & Review
+            </button>
+            <button class="more-section-tab" id="contact-popup-btn" data-section="contact">
+                <span class="gold-icon">📞</span> Contact
+            </button>
+        </div>
+
+        <!-- Breakfast Section -->
+        <section id="breakfast" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Breakfast</h2>
+                <div class="menu-card">
+                    <div class="menu-item">
+                        <div class="menu-item-content">
+                            <h3>Denovo Special Breakfast</h3>
+                            <p>A hearty breakfast to start your day right</p>
+                            <ul style="margin-top:0.5em; margin-bottom:0.5em; padding-left:1.2em;">
+                                <li>2 eggs</li>
+                                <li>4 pieces of nduma</li>
+                                <li>4 pieces of sweet potatoes</li>
+                                <li>4 mandazis</li>
+                                <li>1 sausage</li>
+                                <li>A serving of pan-fried liver</li>
+                                <li>Teapot</li>
+                            </ul>
+                        </div>
+                        <span class="menu-price">KSh 500</span>
+                    </div>
+                </div>
+                <p class="menu-note">(Served till mid-day)</p>
+            </div>
+        </section>
+
+        <!-- Beverages Section -->
+        <section id="beverages" class="section-content hidden beverages-bg">
+            <div class="menu-section beverages-overlay">
+                <h2 class="section-title">Beverages</h2>
+                
+                <h3 class="section-subtitle">Hot Beverages</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Tea Pot</h4>
+                                <p>Classic Kenyan tea served in a pot</p>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Tea Masala</h4>
+                                <p>Spiced milk tea with rich Kenyan flavor</p>
+                            </div>
+                            <span class="menu-price">KSh 150</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>White Coffee</h4>
+                                <p>Hot coffee with milk</p>
+                            </div>
+                            <span class="menu-price">KSh 150</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Black Coffee</h4>
+                                <p>Bold, unsweetened black coffee</p>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Lemon Tea</h4>
+                                <p>Soothing tea with a lemon twist</p>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Porridge (Uji)</h4>
+                                <p>Traditional fermented millet porridge</p>
+                            </div>
+                            <span class="menu-price">KSh 150</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Dawa</h4>
+                                <p>Invigorating honey-ginger-lime beverage</p>
+                            </div>
+                            <span class="menu-price">KSh 250</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">Cold Beverages</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Fresh Milk</h4>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Mala / Mursik</h4>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Soda 300ml</h4>
+                            </div>
+                            <span class="menu-price">KSh 70</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Soda 350ml (T/Away)</h4>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Soda 500ml (T/Away)</h4>
+                            </div>
+                            <span class="menu-price">KSh 120</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Water 500ml</h4>
+                            </div>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Water 1L</h4>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Minute Maid</h4>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Delmonte</h4>
+                            </div>
+                            <span class="menu-price">KSh 400</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Fresh Juice</h4>
+                            </div>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Snacks Section -->
+        <section id="snacks" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Snacks</h2>
+                
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>2 Mandazi</h4>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>2 Fried / Boiled Eggs</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>2 Sausages</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>2 Samosas</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Kebab</h4>
+                            <span class="menu-price">KSh 150</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Pan Drop Cake</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Nduma</h4>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Sweet Potato</h4>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Sandwich - Eggs</h4>
+                            <span class="menu-price">KSh 200</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Sandwich - Beef</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Sandwich - Chicken</h4>
+                            <span class="menu-price">KSh 350</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accompaniments Section -->
+        <section id="accompaniments" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Accompaniments</h2>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Roast Potatoes</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Chips Masala</h4>
+                            <span class="menu-price">KSh 250</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Chips</h4>
+                            <span class="menu-price">KSh 200</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Pousin Chips</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Garlic Chips</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Ugali Brown</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Ugali Plain</h4>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Chapati</h4>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Brown Chapati</h4>
+                            <span class="menu-price">KSh 50</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Vegetable Rice</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Mixed Vegetables</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Rice Plain</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Mukimo</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Course Section -->
+        <section id="maincourse" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Main Course</h2>
+                
+                <h3 class="section-subtitle">Kuku (Chicken)</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>1/4 Kienyeji (Stew/Fry/Choma/Boiled)</h4>
+                            <span class="menu-price">KSh 400</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Full Kienyeji</h4>
+                            <span class="menu-price">KSh 1600</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>1/4 Broiler</h4>
+                            <span class="menu-price">KSh 350</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Full Broiler</h4>
+                            <span class="menu-price">KSh 1400</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Gizzard Plate</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Chicken Wings</h4>
+                            <span class="menu-price">KSh 350</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Chicken Curry</h4>
+                            <span class="menu-price">KSh 450</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Boiled Chicken</h4>
+                            <span class="menu-price">KSh 400</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">Mbuzi (Goat)</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Choma 1 kg</h4>
+                            <span class="menu-price">KSh 1200</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Choma 1/2 kg</h4>
+                            <span class="menu-price">KSh 600</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Boiled 1/2 kg</h4>
+                            <span class="menu-price">KSh 600</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Boiled 1 kg</h4>
+                            <span class="menu-price">KSh 1200</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Fry/Stew 1/4 kg</h4>
+                            <span class="menu-price">KSh 350</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">Other Options</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Liver Plain</h4>
+                            <span class="menu-price">KSh 350</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Matumbo (Stew)</h4>
+                            <span class="menu-price">KSh 250</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Matumbo (Fry)</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">Fish</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Whole Fish (Fry/Stew)</h4>
+                            <span class="menu-price">KSh 400</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Fish Fillet</h4>
+                            <span class="menu-price">KSh 350</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Fish Fingers</h4>
+                            <span class="menu-price">KSh 250</span>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="section-subtitle">Beef Stew & Fry</h3>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Beef Stew</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Beef Fry</h4>
+                            <span class="menu-price">KSh 300</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="platter" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Platter</h2>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Platter for 2</h4>
+                                <p>Perfect for couples—includes 1/4 chicken, 1/4 mbuzi, chapatis, rice, and fresh vegetables</p>
+                            </div>
+                            <span class="menu-price">KSh 1500</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Platter for 4</h4>
+                                <p>A hearty spread for sharing—includes 1/2 chicken, 1/2 mbuzi, chapatis, rice, and fresh vegetables</p>
+                            </div>
+                            <span class="menu-price">KSh 3000</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item">
+                            <div class="menu-item-content">
+                                <h4>Platter for 6</h4>
+                                <p>The ultimate feast—1 full chicken, 1 kg mbuzi, chapatis, rice, and fresh vegetables</p>
+                            </div>
+                            <span class="menu-price">KSh 4500</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="vegetables" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Vegetables</h2>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Mboga Plain</h4>
+                            <span class="menu-price">KSh 200</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Managu</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Sukuma</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Kunde</h4>
+                            <span class="menu-price">KSh 200</span>
+                        </div>
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-item-center">
+                            <h4>Cabbage</h4>
+                            <span class="menu-price">KSh 100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Reviews Section -->
+        <section id="reviews" class="section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Reviews & Feedback</h2>
+                
+                <!-- Review Form replaced with Facebook button -->
+                <div class="menu-card mb-8" style="text-align:center;">
+                    <h3 class="section-subtitle mb-4">Leave a Review</h3>
+                    <a href="https://facebook.com/denovoplace/reviews" target="_blank" rel="noopener" class="facebook-review-btn">
+                        Leave a Review on Facebook
+                    </a>
+                </div>
+
+                <!-- Sample Reviews -->
+                <h3 class="section-subtitle mb-4">Customer Reviews</h3>
+                <div class="space-y-4">
+                    <div class="menu-card">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center text-white font-bold">
+                                    J
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <h4 class="font-semibold">John M.</h4>
+                                    <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-2">Amazing food and great service! The chicken curry is absolutely delicious. Will definitely come back.</p>
+                                <span class="text-xs text-gray-500">2 days ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center text-white font-bold">
+                                    S
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <h4 class="font-semibold">Sarah K.</h4>
+                                    <span class="text-yellow-500">⭐⭐⭐⭐</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-2">Love the breakfast here! Fresh and hearty. The staff is very friendly and the atmosphere is welcoming.</p>
+                                <span class="text-xs text-gray-500">1 week ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center text-white font-bold">
+                                    M
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <h4 class="font-semibold">Mike O.</h4>
+                                    <span class="text-yellow-500">⭐⭐⭐⭐⭐</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-2">Best ugali and mbuzi in Eldoret! Traditional taste with modern presentation. Highly recommended!</p>
+                                <span class="text-xs text-gray-500">2 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="menu-card">
+                        <div class="flex items-start space-x-3">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-red-900 rounded-full flex items-center justify-center text-white font-bold">
+                                    A
+                                </div>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <h4 class="font-semibold">Alice W.</h4>
+                                    <span class="text-yellow-500">⭐⭐⭐⭐</span>
+                                </div>
+                                <p class="text-gray-600 text-sm mb-2">Great value for money. The platter for 2 was perfect for our date night. Fresh ingredients and generous portions.</p>
+                                <span class="text-xs text-gray-500">3 weeks ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Feedback Section -->
+        <section id="feedback" class="more-section-content section-content hidden">
+            <div class="menu-section">
+                <h2 class="section-title">Feedback</h2>
+                <p>We value your feedback! Please let us know how we can improve your experience at Denovo Place.</p>
+                <!-- Feedback form or content can go here -->
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- Contact Dialog -->
+    <div class="dialog-overlay" id="contact-dialog">
+        <div class="dialog-content">
+            <div class="dialog-header">
+                <h3 class="dialog-title">Contact Us</h3>
+                <button class="dialog-close" id="close-dialog">&times;</button>
+            </div>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h4>📞 Phone Numbers:</h4>
+                    <p>
+                        <a href="tel:0725255233" style="color:inherit;text-decoration:underline;cursor:pointer;">0725255233</a> /
+                        <a href="tel:0746457574" style="color:inherit;text-decoration:underline;cursor:pointer;">0746457574</a>
+                    </p>
+                </div>
+                <div class="contact-item">
+                    <h4>🕘 Open Hours:</h4>
+                    <ul>
+                        <li>• Mon–Sat: 7.30am – 8pm</li>
+                        <li>• Sundays: 7.30am - 7.30pm</li>
+                        <li>• Holidays: 7.30am – 6.30pm</li>
+                    </ul>
+                </div>
+                <div class="contact-item">
+                    <h4>📍 Location:</h4>
+                    <p>Opposite St.Lukes Hospital, Nandi Road - Eldoret, Kenya</p>
+                </div>
+                <div class="contact-item">
+                    <h4 style="display: flex; align-items: center; gap: 0.75em;">
+                        <span style="display: inline-flex; align-items: center;">
+                            <svg width="28" height="28" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="50" height="50" rx="10" fill="#1877f3"/>
+                                <path d="M34 25.5h-6.25V40h-5V25.5H19v-4.25h3.75v-2.75c0-3.1 1.65-6.25 6.25-6.25h4.25v4.25h-3.25c-1.1 0-1.25.4-1.25 1.25v3.5H34l-.75 4.25z" fill="#fff"/>
+                            </svg>
+                        </span>
+                        Social Media:
+                    </h4>
+                    <a href="https://facebook.com/denovoplace" target="_blank">@denovoplace</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing...');
+        
+        // Navigation functionality
+        const homeButton = document.querySelector('.nav-button[href="index.html"]');
+        const sections = document.querySelectorAll('.section-content');
+        const contactDialog = document.getElementById('contact-dialog');
+        const closeDialog = document.getElementById('close-dialog');
+        const menuBtn = document.getElementById('menu-btn');
+        const menuTabs = document.getElementById('menu-section-tabs');
+        const menuTabButtons = menuTabs.querySelectorAll('.menu-section-tab');
+        const menuSections = [
+            document.getElementById('breakfast'),
+            document.getElementById('beverages'),
+            document.getElementById('snacks'),
+            document.getElementById('accompaniments'),
+            document.getElementById('maincourse'),
+            document.getElementById('platter'),
+            document.getElementById('vegetables')
+        ];
+        const homeSection = document.getElementById('home');
+        const moreBtn = document.getElementById('more-btn');
+        const moreSectionTabs = document.getElementById('more-section-tabs');
+        const moreTabButtons = moreSectionTabs.querySelectorAll('.more-section-tab');
+        const moreSections = [
+            document.getElementById('feedback')
+        ];
+        const contactPopupBtn = document.getElementById('contact-popup-btn');
+        
+        // Debug logging
+        console.log('Elements found:', {
+            homeButton: !!homeButton,
+            menuBtn: !!menuBtn,
+            moreBtn: !!moreBtn,
+            menuTabs: !!menuTabs,
+            moreSectionTabs: !!moreSectionTabs,
+            contactDialog: !!contactDialog,
+            closeDialog: !!closeDialog,
+            homeSection: !!homeSection
+        });
+
+        // Initialize: Hide all menu sections and show only home
+        function initializePage() {
+            // Show only home section
+            homeSection.classList.remove('hidden');
+            
+            // Hide all menu sections
+            menuSections.forEach(section => {
+                if (section) section.classList.add('hidden');
+            });
+            
+            // Hide all more sections
+            moreSections.forEach(section => {
+                if (section) section.classList.add('hidden');
+            });
+            
+            // Hide menu and more tabs
+            menuTabs.style.display = 'none';
+            moreSectionTabs.style.display = 'none';
+            
+            // Set home button as active
+            document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+            homeButton.classList.add('active');
+        }
+
+        // Create the back button once and keep it in memory
+        const backBtn = document.createElement('button');
+        backBtn.textContent = '';
+        backBtn.innerHTML = '<span style="font-size:0.95em;line-height:1;">&laquo;</span>';
+        backBtn.className = 'menu-back-btn';
+        backBtn.style.display = 'none';
+        backBtn.style.background = '#fff';
+        backBtn.style.border = 'none';
+        backBtn.style.color = '#7f1d1d';
+        backBtn.style.fontSize = '0.95em';
+        backBtn.style.borderRadius = '50%';
+        backBtn.style.width = '1.6em';
+        backBtn.style.height = '1.6em';
+        backBtn.style.padding = '0';
+        backBtn.style.marginRight = '0.5em';
+        backBtn.style.boxShadow = '0 1px 3px #bfa10022';
+        backBtn.style.display = 'flex';
+        backBtn.style.alignItems = 'center';
+        backBtn.style.justifyContent = 'center';
+
+        // Home button
+        if (homeButton) {
+            homeButton.addEventListener('click', () => {
+                console.log('Home button clicked');
+                initializePage();
+                hideBackBtn();
+            });
+        } else {
+            console.error('Home button not found');
+        }
+
+        // Function to set active section and update hash
+        function setActiveSection(sectionId, updateHash) {
+            homeButton.classList.toggle('active', sectionId === 'home');
+            // Hide all sections
+            sections.forEach(section => {
+                section.classList.add('hidden');
+            });
+            if (sectionId === 'home') {
+                const target = document.getElementById(sectionId);
+                if (target) {
+                    target.classList.remove('hidden');
+                }
+                // Ensure menu and more tabs are hidden when home is active
+                menuTabs.style.display = 'none';
+                moreSectionTabs.style.display = 'none';
+                // Hide all menu and more sections
+                menuSections.forEach(section => section.classList.add('hidden'));
+                moreSections.forEach(section => section.classList.add('hidden'));
+                // Remove active from all tab buttons
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+            }
+            if (updateHash) {
+                window.location.hash = '#' + sectionId;
+            }
+        }
+
+        // Hash navigation: show section on hashchange or page load
+        function showSectionFromHash() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash === 'home') {
+                setActiveSection('home', false);
+            } else {
+                const validSection = hash && document.getElementById(hash);
+                setActiveSection(validSection ? hash : 'home', false);
+            }
+        }
+        window.addEventListener('hashchange', showSectionFromHash);
+        document.addEventListener('DOMContentLoaded', showSectionFromHash);
+
+        // Contact dialog
+        if (closeDialog && contactDialog) {
+            closeDialog.addEventListener('click', () => {
+                contactDialog.style.display = 'none';
+            });
+            contactDialog.addEventListener('click', (e) => {
+                if (e.target === contactDialog) {
+                    contactDialog.style.display = 'none';
+                }
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && contactDialog.style.display === 'flex') {
+                    contactDialog.style.display = 'none';
+                }
+            });
+        } else {
+            console.error('Contact dialog elements not found');
+        }
+
+        // Explore Menu button
+        const exploreMenuBtn = document.getElementById('explore-menu-btn');
+        if (exploreMenuBtn) {
+            exploreMenuBtn.addEventListener('click', () => {
+                console.log('Explore menu button clicked');
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                if (menuBtn) menuBtn.classList.add('active');
+                if (homeSection) homeSection.classList.add('hidden');
+                if (menuTabs) menuTabs.style.display = 'grid';
+                if (moreSectionTabs) moreSectionTabs.style.display = 'none';
+                // Hide all menu and more sections
+                menuSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+                moreSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+                // Remove active from all tab buttons
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+                history.pushState({ section: 'menu' }, '', '#menu');
+            });
+        } else {
+            console.error('Explore menu button not found');
+        }
+
+        // FAB show on scroll to bottom (removed since element doesn't exist)
+        // const fabOrder = document.querySelector('.fab-order');
+        // function checkFabVisibility() {
+        //     if (!fabOrder) return;
+        //     const scrollY = window.scrollY || window.pageYOffset;
+        //     const windowHeight = window.innerHeight;
+        //     const bodyHeight = document.body.offsetHeight;
+        //     if (scrollY + windowHeight >= bodyHeight - 10) {
+        //         fabOrder.classList.add('visible');
+        //     } else {
+        //         fabOrder.classList.remove('visible');
+        //     }
+        // }
+        // window.addEventListener('scroll', checkFabVisibility);
+        // window.addEventListener('resize', checkFabVisibility);
+        // document.addEventListener('DOMContentLoaded', checkFabVisibility);
+
+        // Menu button
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                console.log('Menu button clicked');
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                menuBtn.classList.add('active');
+                if (homeSection) homeSection.classList.add('hidden');
+                if (menuTabs) menuTabs.style.display = 'grid';
+                if (moreSectionTabs) moreSectionTabs.style.display = 'none';
+                // Hide all menu and more sections
+                menuSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+                moreSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+                // Remove active from all tab buttons
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+                history.pushState({ section: 'menu' }, '', '#menu');
+            });
+        } else {
+            console.error('Menu button not found');
+        }
+
+        // More button
+        if (moreBtn) {
+            moreBtn.addEventListener('click', () => {
+                console.log('More button clicked');
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                moreBtn.classList.add('active');
+                if (homeSection) homeSection.classList.add('hidden');
+                if (menuTabs) menuTabs.style.display = 'none';
+                if (moreSectionTabs) moreSectionTabs.style.display = 'flex';
+                // Hide all menu and more sections
+                menuSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+                moreSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+                // Remove active from all tab buttons
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+                history.pushState({ section: 'more' }, '', '#more');
+            });
+        } else {
+            console.error('More button not found');
+        }
+
+        // Helper to insert back button inline with section heading
+        function showBackBtnInSection(section) {
+            const heading = section.querySelector('.section-title');
+            if (heading && backBtn.parentNode !== heading) {
+                heading.insertAdjacentElement('afterbegin', backBtn);
+            }
+            backBtn.style.display = 'inline-flex';
+            backBtn.style.verticalAlign = 'middle';
+            backBtn.style.marginRight = '0.7em';
+            backBtn.style.marginBottom = '0';
+            backBtn.style.marginTop = '0';
+        }
+        function hideBackBtn() {
+            backBtn.style.display = 'none';
+        }
+
+        backBtn.addEventListener('click', function() {
+            menuTabs.style.display = 'grid';
+            hideBackBtn();
+            menuSections.forEach(section => {
+                if (section) section.classList.add('hidden');
+            });
+            // Ensure more sections stay hidden when returning from menu
+            moreSectionTabs.style.display = 'none';
+            moreSections.forEach(section => {
+                if (section) section.classList.add('hidden');
+            });
+            history.pushState({ section: 'menu' }, '', '#menu');
+        });
+
+        // Menu tab click handlers
+        if (menuTabButtons.length > 0) {
+            menuTabButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Menu tab clicked:', this.dataset.section);
+                    
+                    // Remove active from all tab buttons
+                    menuTabButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Hide all menu sections
+                    menuSections.forEach(section => {
+                        if (section) section.classList.add('hidden');
+                    });
+                    
+                    // Hide menu tabs
+                    if (menuTabs) menuTabs.style.display = 'none';
+                    
+                    // Show the selected section
+                    const sectionId = this.dataset.section;
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.classList.remove('hidden');
+                        showBackBtnInSection(section);
+                    }
+                    
+                    // Always hide more tabs and sections when a menu tab is selected
+                    if (moreSectionTabs) moreSectionTabs.style.display = 'none';
+                    moreSections.forEach(section => {
+                        if (section) section.classList.add('hidden');
+                    });
+                    moreTabButtons.forEach(b => b.classList.remove('active'));
+                    history.pushState({ section: sectionId }, '', '#' + sectionId);
+                });
+            });
+        } else {
+            console.error('No menu tab buttons found');
+        }
+
+        // More tab button logic (excluding Contact)
+        if (moreTabButtons.length > 0) {
+            moreTabButtons.forEach(btn => {
+                if (btn.id !== 'contact-popup-btn') {
+                    btn.addEventListener('click', function() {
+                        // Remove active from all tab buttons
+                        moreTabButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        // Hide all more sections
+                        moreSections.forEach(section => {
+                            if (section) section.classList.add('hidden');
+                        });
+                        // Show the selected section
+                        const section = document.getElementById(this.dataset.section);
+                        if (section) section.classList.remove('hidden');
+                        history.pushState({ section: this.dataset.section }, '', '#' + this.dataset.section);
+                    });
+                }
+            });
+        } else {
+            console.error('No more tab buttons found');
+        }
+        
+        // Contact popup logic
+        if (contactPopupBtn && contactDialog) {
+            contactPopupBtn.addEventListener('click', function() {
+                document.querySelectorAll('.more-section-tab').forEach(b => b.classList.remove('active'));
+                contactDialog.style.display = 'flex';
+                // Hide all more sections
+                moreSections.forEach(section => {
+                    if (section) section.classList.add('hidden');
+                });
+            });
+        } else {
+            console.error('Contact popup button or dialog not found');
+        }
+
+        // Glovo order button
+        const glovoOrderBtn = document.getElementById('glovo-order-btn');
+        if (glovoOrderBtn) {
+            glovoOrderBtn.addEventListener('click', function() {
+                console.log('Glovo order button clicked');
+                // Direct link to Denovo Place Eldoret on Glovo
+                const glovoDenovoUrl = 'https://glovoapp.com/ke/en/eldoret/denovo-place-eld/';
+                
+                // Check if we're on mobile
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                
+                if (isMobile) {
+                    // Try to open the app first with the specific restaurant
+                    const glovoAppUrl = 'glovoapp://store/denovo-place-eld';
+                    window.location.href = glovoAppUrl;
+                    
+                    // Fallback to website after a short delay if app doesn't open
+                    setTimeout(() => {
+                        window.location.href = glovoDenovoUrl;
+                    }, 2000);
+                } else {
+                    // On desktop, open the specific Denovo Place page
+                    window.open(glovoDenovoUrl, '_blank');
+                }
+            });
+        } else {
+            console.error('Glovo order button not found');
+        }
+
+        // Feedback & Review button
+        const reviewsMoreBtn = document.getElementById('reviews-more-btn');
+        if (reviewsMoreBtn) {
+            reviewsMoreBtn.addEventListener('click', function() {
+                console.log('Reviews button clicked');
+                // Direct link to Google Forms feedback form
+                const feedbackFormUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfbPHdXa9KsdxICzHbYpPgj_V-nce9miFO20WIm5OhtB1n8eA/viewform?usp=sharing&ouid=114896397203850079021';
+                
+                // Open the feedback form in the same page
+                window.location.href = feedbackFormUrl;
+            });
+        } else {
+            console.error('Reviews button not found');
+        }
+
+        // Explore Vehicles button
+        const exploreVehiclesBtn = document.getElementById('explore-vehicles-btn');
+        if (exploreVehiclesBtn) {
+            exploreVehiclesBtn.addEventListener('click', function() {
+                console.log('Explore vehicles button clicked');
+                // Direct link to Denovo Motors Facebook page
+                const facebookUrl = 'https://www.facebook.com/denovomotorseldoret';
+                
+                // Open Facebook page directly in new tab/window
+                window.open(facebookUrl, '_blank');
+            });
+        } else {
+            console.error('Explore vehicles button not found');
+        }
+
+        // Initialize the page
+        initializePage();
+
+        // --- Add history state management for SPA navigation ---
+        function navigateToSection(sectionId) {
+            setActiveSection(sectionId, false);
+            history.pushState({ section: sectionId }, '', '#' + sectionId);
+        }
+
+        // Override navigation button handlers to use navigateToSection
+        if (homeButton) {
+            homeButton.addEventListener('click', () => {
+                navigateToSection('home');
+                hideBackBtn();
+            });
+        }
+        if (exploreMenuBtn) {
+            exploreMenuBtn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                if (menuBtn) menuBtn.classList.add('active');
+                if (homeSection) homeSection.classList.add('hidden');
+                if (menuTabs) menuTabs.style.display = 'grid';
+                if (moreSectionTabs) moreSectionTabs.style.display = 'none';
+                menuSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                moreSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+                history.pushState({ section: 'menu' }, '', '#menu');
+            });
+        }
+        if (menuBtn) {
+            menuBtn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                menuBtn.classList.add('active');
+                if (homeSection) homeSection.classList.add('hidden');
+                if (menuTabs) menuTabs.style.display = 'grid';
+                if (moreSectionTabs) moreSectionTabs.style.display = 'none';
+                menuSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                moreSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+                history.pushState({ section: 'menu' }, '', '#menu');
+            });
+        }
+        if (moreBtn) {
+            moreBtn.addEventListener('click', () => {
+                document.querySelectorAll('.nav-button').forEach(btn => btn.classList.remove('active'));
+                moreBtn.classList.add('active');
+                if (homeSection) homeSection.classList.add('hidden');
+                if (menuTabs) menuTabs.style.display = 'none';
+                if (moreSectionTabs) moreSectionTabs.style.display = 'flex';
+                menuSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                moreSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                menuTabButtons.forEach(b => b.classList.remove('active'));
+                moreTabButtons.forEach(b => b.classList.remove('active'));
+                hideBackBtn();
+                history.pushState({ section: 'more' }, '', '#more');
+            });
+        }
+        if (menuTabButtons.length > 0) {
+            menuTabButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    menuTabButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    menuSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                    if (menuTabs) menuTabs.style.display = 'none';
+                    const sectionId = this.dataset.section;
+                    const section = document.getElementById(sectionId);
+                    if (section) {
+                        section.classList.remove('hidden');
+                        showBackBtnInSection(section);
+                    }
+                    if (moreSectionTabs) moreSectionTabs.style.display = 'none';
+                    moreSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                    moreTabButtons.forEach(b => b.classList.remove('active'));
+                    history.pushState({ section: sectionId }, '', '#' + sectionId);
+                });
+            });
+        }
+        if (moreTabButtons.length > 0) {
+            moreTabButtons.forEach(btn => {
+                if (btn.id !== 'contact-popup-btn') {
+                    btn.addEventListener('click', function() {
+                        moreTabButtons.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        moreSections.forEach(section => { if (section) section.classList.add('hidden'); });
+                        const section = document.getElementById(this.dataset.section);
+                        if (section) section.classList.remove('hidden');
+                        history.pushState({ section: this.dataset.section }, '', '#' + this.dataset.section);
+                    });
+                }
+            });
+        }
+        // Back button in menu sections
+        backBtn.addEventListener('click', function() {
+            if (menuTabs) menuTabs.style.display = 'grid';
+            hideBackBtn();
+            menuSections.forEach(section => { if (section) section.classList.add('hidden'); });
+            moreSectionTabs.style.display = 'none';
+            moreSections.forEach(section => { if (section) section.classList.add('hidden'); });
+            history.pushState({ section: 'menu' }, '', '#menu');
+        });
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', function(event) {
+            const section = (event.state && event.state.section) || window.location.hash.replace('#', '') || 'home';
+            setActiveSection(section, false);
+        });
+    });
+    </script>
+</body>
+</html> 
