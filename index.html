@@ -89,7 +89,7 @@
             height: 72px;
         }
 
-        .nav-logo { height: 48px; width: 48px; border-radius: 50%; object-fit: cover; object-position: center; transition: transform var(--transition-fast); box-shadow: 0 0 0 2px rgba(201,162,39,0.6); }
+        .nav-logo { height: 48px; width: 48px; border-radius: 50%; object-fit: cover; object-position: center; background: #1a1a1a; transition: transform var(--transition-fast); box-shadow: 0 0 0 2px rgba(201,162,39,0.6); }
         .nav-logo:hover { transform: scale(1.05); }
 
         .nav-menu { display: flex; align-items: center; gap: 0.5rem; }
@@ -137,6 +137,7 @@
             border-radius: 50%;
             object-fit: cover;
             object-position: center;
+            background: #1a1a1a;
             box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 0 0 4px var(--color-primary);
             transition: transform var(--transition-slow), box-shadow var(--transition-slow);
         }
@@ -270,6 +271,15 @@
         /* Menu Sections */
         .section-content { animation: fadeIn 0.4s ease; }
         .section-content.hidden { display: none; }
+
+        .section-hero {
+            width: 100%;
+            max-height: 260px;
+            object-fit: cover;
+            border-radius: var(--radius-xl);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
 
         .menu-section { padding: 1rem 0; }
 
@@ -526,31 +536,31 @@
         <div id="menu-tabs" class="section-tabs">
             <div class="menu-tabs-grid">
                 <button class="menu-tab" data-section="breakfast">
-                    <div class="menu-tab-img-wrapper"><img src="food images/breakfast.png" alt="Breakfast" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/18755018/pexels-photo-18755018.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Breakfast" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Breakfast</span>
                 </button>
                 <button class="menu-tab" data-section="beverages">
-                    <div class="menu-tab-img-wrapper"><img src="food images/beverages.png" alt="Beverages" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/34229837/pexels-photo-34229837.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Beverages" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Beverages</span>
                 </button>
                 <button class="menu-tab" data-section="snacks">
-                    <div class="menu-tab-img-wrapper"><img src="food images/snacks.png" alt="Snacks" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/14477873/pexels-photo-14477873.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Snacks" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Snacks</span>
                 </button>
                 <button class="menu-tab" data-section="accompaniments">
-                    <div class="menu-tab-img-wrapper"><img src="food images/accompaniments.png" alt="Accompaniments" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/29150162/pexels-photo-29150162.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Accompaniments" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Accompaniments</span>
                 </button>
                 <button class="menu-tab" data-section="maincourse">
-                    <div class="menu-tab-img-wrapper"><img src="food images/main_course.png" alt="Main Course" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/17312401/pexels-photo-17312401.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Main Course" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Main Course</span>
                 </button>
                 <button class="menu-tab" data-section="platter">
-                    <div class="menu-tab-img-wrapper"><img src="food images/denovo_plartter.png" alt="Platter" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/6004193/pexels-photo-6004193.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Platter" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Platter</span>
                 </button>
                 <button class="menu-tab" data-section="vegetables">
-                    <div class="menu-tab-img-wrapper"><img src="food images/vegetables.png" alt="Vegetables" class="menu-tab-img"></div>
+                    <div class="menu-tab-img-wrapper"><img src="https://images.pexels.com/photos/2181151/pexels-photo-2181151.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Vegetables" class="menu-tab-img"></div>
                     <span class="menu-tab-label">Vegetables</span>
                 </button>
             </div>
@@ -570,6 +580,7 @@
                     <button class="back-btn" data-back>←</button>
                     <h2 class="section-title">Breakfast</h2>
                 </div>
+                <img src="https://images.pexels.com/photos/18755018/pexels-photo-18755018.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Breakfast spread" class="section-hero">
                 <div class="menu-card mb-6">
                     <div class="menu-item">
                         <div class="menu-item-content">
@@ -598,6 +609,7 @@
                     <button class="back-btn" data-back>←</button>
                     <h2 class="section-title">Beverages</h2>
                 </div>
+                <img src="https://images.pexels.com/photos/34229837/pexels-photo-34229837.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Hot beverages" class="section-hero">
                 <h3 class="section-subtitle">Hot Beverages</h3>
                 <div class="menu-grid">
                     <div class="menu-card"><div class="menu-item"><div class="menu-item-content"><h4>Tea Pot</h4><p>Classic Kenyan tea served in a pot</p></div><span class="menu-price">KSh 100</span></div></div>
@@ -627,6 +639,7 @@
         <section id="snacks" class="section-content hidden">
             <div class="menu-section">
                 <div class="section-header"><button class="back-btn" data-back>←</button><h2 class="section-title">Snacks</h2></div>
+                <img src="https://images.pexels.com/photos/14477873/pexels-photo-14477873.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Snacks" class="section-hero">
                 <div class="menu-grid">
                     <div class="menu-card"><div class="menu-item-center"><h4>2 Mandazi</h4><span class="menu-price">KSh 50</span></div></div>
                     <div class="menu-card"><div class="menu-item-center"><h4>2 Fried / Boiled Eggs</h4><span class="menu-price">KSh 100</span></div></div>
@@ -646,6 +659,7 @@
         <section id="accompaniments" class="section-content hidden">
             <div class="menu-section">
                 <div class="section-header"><button class="back-btn" data-back>←</button><h2 class="section-title">Accompaniments</h2></div>
+                <img src="https://images.pexels.com/photos/29150162/pexels-photo-29150162.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Accompaniments" class="section-hero">
                 <div class="menu-grid">
                     <div class="menu-card"><div class="menu-item-center"><h4>Roast Potatoes</h4><span class="menu-price">KSh 300</span></div></div>
                     <div class="menu-card"><div class="menu-item-center"><h4>Chips Masala</h4><span class="menu-price">KSh 250</span></div></div>
@@ -667,6 +681,7 @@
         <section id="maincourse" class="section-content hidden">
             <div class="menu-section">
                 <div class="section-header"><button class="back-btn" data-back>←</button><h2 class="section-title">Main Course</h2></div>
+                <img src="https://images.pexels.com/photos/17312401/pexels-photo-17312401.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Grilled meat platter" class="section-hero">
                 <h3 class="section-subtitle">Kuku (Chicken)</h3>
                 <div class="menu-grid">
                     <div class="menu-card"><div class="menu-item-center"><h4>1/4 Kienyeji (Stew/Fry/Choma/Boiled)</h4><span class="menu-price">KSh 400</span></div></div>
@@ -709,6 +724,7 @@
         <section id="platter" class="section-content hidden">
             <div class="menu-section">
                 <div class="section-header"><button class="back-btn" data-back>←</button><h2 class="section-title">Platter</h2></div>
+                <img src="https://images.pexels.com/photos/6004193/pexels-photo-6004193.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Food platter" class="section-hero">
                 <div class="menu-grid">
                     <div class="menu-card"><div class="menu-item"><div class="menu-item-content"><h4>Platter for 2</h4><p>Perfect for couples - 1/4 chicken, 1/4 mbuzi, chapatis, rice, and fresh vegetables</p></div><span class="menu-price">KSh 1500</span></div></div>
                     <div class="menu-card"><div class="menu-item"><div class="menu-item-content"><h4>Platter for 4</h4><p>Hearty spread - 1/2 chicken, 1/2 mbuzi, chapatis, rice, and fresh vegetables</p></div><span class="menu-price">KSh 3000</span></div></div>
@@ -720,6 +736,7 @@
         <section id="vegetables" class="section-content hidden">
             <div class="menu-section">
                 <div class="section-header"><button class="back-btn" data-back>←</button><h2 class="section-title">Vegetables</h2></div>
+                <img src="https://images.pexels.com/photos/2181151/pexels-photo-2181151.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Vegetable dishes" class="section-hero">
                 <div class="menu-grid">
                     <div class="menu-card"><div class="menu-item-center"><h4>Mboga Plain</h4><span class="menu-price">KSh 200</span></div></div>
                     <div class="menu-card"><div class="menu-item-center"><h4>Managu</h4><span class="menu-price">KSh 100</span></div></div>
