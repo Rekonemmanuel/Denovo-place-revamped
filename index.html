@@ -805,44 +805,66 @@
                 button.classList.add('active');
             }
 
+            function showView(view, navButton) {
+                hideAllSections();
+                if (view === 'home') {
+                    homeSection.classList.remove('hidden');
+                } else if (view === 'menu') {
+                    menuTabs.classList.add('visible');
+                } else if (view === 'more') {
+                    moreTabs.classList.add('visible');
+                } else {
+                    document.getElementById(view).classList.remove('hidden');
+                }
+                if (navButton) setActiveNav(navButton);
+            }
+
+            function navigateTo(view, navButton) {
+                showView(view, navButton);
+                history.pushState({ view }, '', '#' + view);
+                window.scrollTo(0, 0);
+            }
+
+            window.addEventListener('popstate', (e) => {
+                const view = (e.state && e.state.view) || 'home';
+                let navButton = navHome;
+                if (view === 'menu') navButton = navMenuBtn;
+                else if (view === 'more') navButton = navMoreBtn;
+                showView(view, navButton);
+                window.scrollTo(0, 0);
+            });
+
+            history.replaceState({ view: 'home' }, '', '#home');
+
             navHome.addEventListener('click', (e) => {
                 e.preventDefault();
-                hideAllSections();
-                homeSection.classList.remove('hidden');
-                setActiveNav(navHome);
+                navigateTo('home', navHome);
             });
 
             navMenuBtn.addEventListener('click', () => {
-                hideAllSections();
-                menuTabs.classList.add('visible');
-                setActiveNav(navMenuBtn);
+                navigateTo('menu', navMenuBtn);
             });
 
             document.getElementById('explore-menu-btn').addEventListener('click', () => {
-                hideAllSections();
-                menuTabs.classList.add('visible');
-                setActiveNav(navMenuBtn);
+                navigateTo('menu', navMenuBtn);
             });
 
             navMoreBtn.addEventListener('click', () => {
-                hideAllSections();
-                moreTabs.classList.add('visible');
-                setActiveNav(navMoreBtn);
+                navigateTo('more', navMoreBtn);
             });
 
             document.querySelectorAll('.menu-tab').forEach(tab => {
                 tab.addEventListener('click', () => {
                     const sectionId = tab.dataset.section;
-                    menuTabs.classList.remove('visible');
-                    document.getElementById(sectionId).classList.remove('hidden');
+                    showView(sectionId, null);
+                    history.pushState({ view: sectionId }, '', '#' + sectionId);
+                    window.scrollTo(0, 0);
                 });
             });
 
             document.querySelectorAll('[data-back]').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    hideAllSections();
-                    menuTabs.classList.add('visible');
-                    setActiveNav(navMenuBtn);
+                    history.back();
                 });
             });
 
