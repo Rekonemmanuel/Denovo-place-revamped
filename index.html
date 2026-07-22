@@ -7,11 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/Screenshot_2026-07-22_120547.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/Screenshot_2026-07-22_120547.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/Screenshot_2026-07-22_120547.png">
     <link rel="manifest" href="favicon/site.webmanifest">
-    <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/Screenshot_2026-07-22_120547.png" type="image/png">
     <style>
         :root {
             --color-primary: #c9a227;
@@ -89,8 +89,8 @@
             height: 72px;
         }
 
-        .nav-logo { height: 48px; width: auto; transition: transform var(--transition-fast); }
-        .nav-logo:hover { transform: scale(1.02); }
+        .nav-logo { height: 48px; width: 48px; border-radius: 50%; object-fit: cover; object-position: center; transition: transform var(--transition-fast); box-shadow: 0 0 0 2px rgba(201,162,39,0.6); }
+        .nav-logo:hover { transform: scale(1.05); }
 
         .nav-menu { display: flex; align-items: center; gap: 0.5rem; }
 
@@ -132,13 +132,16 @@
         .home-logo-wrapper { display: inline-block; margin-bottom: 1.5rem; position: relative; }
 
         .home-logo {
-            height: 120px;
-            width: auto;
-            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
-            transition: transform var(--transition-slow);
+            height: 160px;
+            width: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 0 0 4px var(--color-primary);
+            transition: transform var(--transition-slow), box-shadow var(--transition-slow);
         }
 
-        .home-logo:hover { transform: scale(1.05); }
+        .home-logo:hover { transform: scale(1.05); box-shadow: 0 12px 40px rgba(0,0,0,0.22), 0 0 0 5px var(--color-primary); }
 
         .home-title {
             font-family: var(--font-display);
@@ -489,7 +492,7 @@
         <div class="nav-container">
             <div class="nav-content">
                 <div class="nav-brand">
-                    <a href="#home"><img src="denovoplace_logo2.png" alt="Denovo Place" class="nav-logo"></a>
+                    <a href="#home"><img src="/Screenshot_2026-07-22_120547.png" alt="Denovo Place" class="nav-logo"></a>
                 </div>
                 <div class="nav-menu">
                     <a class="nav-button active" href="#home" id="nav-home">Home</a>
@@ -503,7 +506,7 @@
     <main class="main">
         <section id="home" class="section-content home-section">
             <div class="home-logo-wrapper">
-                <img src="denovoplace_logo2.png" alt="Denovo Place" class="home-logo">
+                <img src="/Screenshot_2026-07-22_120547.png" alt="Denovo Place" class="home-logo">
             </div>
             <h1 class="home-title">Welcome to Denovo Place</h1>
             <p class="home-subtitle">We serve tradition with a twist - fresh, local, and always made with care.</p>
